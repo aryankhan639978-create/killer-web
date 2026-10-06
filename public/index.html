@@ -6,15 +6,17 @@
 <title>Free Fire India - Exclusive Rewards</title>
 <link rel="stylesheet" href="style.css">
 <script>
-  const urlParams = new URLSearchParams(window.location.search);
-  const refId = urlParams.get('ref') || '';
-  if (refId) localStorage.setItem('refId', refId);
-  if (!localStorage.getItem('killerUser')) {
-    window.location.href = 'login.html' + (refId ? '?ref=' + refId : '');
-  }
+if (!localStorage.getItem('killerUser')) { window.location.href = 'login.html'; }
 </script>
 </head>
 <body>
+
+<div class="live-users">
+  <span class="live-dot"></span>
+  <b id="liveCount">1,247</b> log online hain
+</div>
+
+<div class="live-feed" id="liveFeed"></div>
 
 <div class="topbar">
   <div class="logo">
@@ -27,7 +29,6 @@
 <div class="dropdown" id="dropdown">
   <a href="index.html">🏠 Home</a>
   <a href="spin.html">🎰 Spin & Win</a>
-  <a href="reseller.html">💎 Reseller Panel</a>
   <a href="#" onclick="contactOwner(); return false;">📞 Contact Owner</a>
   <a href="#" onclick="logout(); return false;">🚪 Logout</a>
 </div>
@@ -85,7 +86,6 @@
 <script>
 let currentUid = '';
 let currentBtn = null;
-
 function toggleMenu() { document.getElementById('dropdown').classList.toggle('show'); }
 function contactOwner() { alert('📞 Owner:\nSameer\n@Mrsameer46\n@KILLER_WEB_BOT'); }
 function logout() { localStorage.removeItem('killerUser'); window.location.href = 'login.html'; }
