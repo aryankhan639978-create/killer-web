@@ -17,9 +17,7 @@ const BOT_START = new Date('2026-10-05');
 const WEBSITE_URL = 'https://killer-web.onrender.com';
 
 // ===== MONGODB =====
-const MONGO_URI = 'mongodb+srv://ven1h32858_db_user:GCXMQ6rDxZGuJtJ@cluster0.l1bonwi.mongodb.net/killerweb?retryWrites=true&w=majority';
-
-mongoose.connect(MONGO_URI)
+const MONGO_URI = 'mongodb+srv://venih32858_db_user:GCXMQ6rDxZGuJtJ@cluster0.libonwi.mongodb.net/killerweb?retryWrites=true&w=majority';mongoose.connect(MONGO_URI)
   .then(() => console.log('✅ MongoDB connected'))
   .catch(err => console.log('❌ MongoDB error:', err.message));
 
