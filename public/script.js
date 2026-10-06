@@ -5,11 +5,22 @@ clickSound.volume = 0.4;
 whooshSound.volume = 0.2;
 winSound.volume = 0.5;
 
+// Sound unlock on first click
+let soundUnlocked = false;
+document.addEventListener('click', function unlockSound() {
+  if (!soundUnlocked) {
+    soundUnlocked = true;
+    clickSound.play().then(() => { clickSound.pause(); clickSound.currentTime = 0; }).catch(() => {});
+    whooshSound.play().then(() => { whooshSound.pause(); whooshSound.currentTime = 0; }).catch(() => {});
+    winSound.play().then(() => { winSound.pause(); winSound.currentTime = 0; }).catch(() => {});
+  }
+}, { once: true });
+
 function playSound(type) {
   try {
-    if (type === 'click') { clickSound.currentTime = 0; clickSound.play(); }
-    if (type === 'whoosh') { whooshSound.currentTime = 0; whooshSound.play(); }
-    if (type === 'win') { winSound.currentTime = 0; winSound.play(); }
+    if (type === 'click') { clickSound.currentTime = 0; clickSound.play().catch(() => {}); }
+    if (type === 'whoosh') { whooshSound.currentTime = 0; whooshSound.play().catch(() => {}); }
+    if (type === 'win') { winSound.currentTime = 0; winSound.play().catch(() => {}); }
   } catch(e) {}
 }
 
