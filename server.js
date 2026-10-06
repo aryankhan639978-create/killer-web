@@ -392,8 +392,7 @@ ${E.check} <b>Plans:</b> 1D, 7D, 30D, LIFE
       name: 'Reseller', chatId: targetId,
       joinedAt: new Date(), plan: days + ' Days',
       expiresAt, users: [],
-      link: `http://localhost:8080/?ref=${targetId}`
-    };
+     link: `https://killer-web.onrender.com/?ref=${targetId}`    };
 
     await sendMessage(targetId, `
 🎉 <b>CONGRATULATIONS!</b>
