@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login - Killer Web</title>
+<link rel="stylesheet" href="style.css">
+<script>
+  const urlParams = new URLSearchParams(window.location.search);
+  const refId = urlParams.get('ref') || '';
+  localStorage.setItem('refId', refId);
+</script>
+</head>
+<body class="auth-page">
+<div class="auth-box">
+  <div class="logo-circle">🔥</div>
+  <div class="auth-title">KILLER WEB</div>
+  <div class="auth-sub">Login to access rewards</div>
+  <form id="loginForm" onsubmit="return submitLogin(event);">
+    <div class="input-group">
+      <label>👤 Username or Email</label>
+      <input type="text" id="loginUser" placeholder="Enter username or email" required>
+    </div>
+    <div class="input-group">
+      <label>🔒 Password</label>
+      <input type="password" id="loginPass" placeholder="Enter password" required>
+    </div>
+    <button type="submit" class="auth-btn" id="loginBtn">🚀 LOGIN</button>
+    <p class="auth-link">Don't have account? <a href="signup.html">Sign Up</a></p>
+  </form>
+</div>
+<div id="toast" class="toast"></div>
+<script>
+async function submitLogin(e) {
+  e.preventDefault();
+  const user = document.getElementById('loginUser').value.trim();
+  const pass = document.getElementById('loginPass').value.trim();
+  if (!user || !pass) { showToast('❌ Saari fields bharo!'); return false; }
+  const btn = document.getElementById('loginBtn');
+  btn.disabled = true; btn.textContent = '⏳ Verifying...';
+  try {
+    const res = await fetch('/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user, pass })
+    });
+    const data = await res.json();
+    if (data.success) {
+      localStorage.setItem('killerUser', JSON.stringify(data.user));
+      showToast('🎉 Login successful!');
+      setTimeout(() => window.location.href = 'index.html', 800);
+    } else {
+      showToast('❌ ' + data.msg);
+      btn.disabled = false; btn.textContent = '🚀 LOGIN';
+    }
+  } catch (err) {
+    showToast('❌ Network error');
+    btn.disabled = false; btn.textContent = '🚀 LOGIN';
+  }
+  return false;
+}
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+</script>
+</body>
+</html>

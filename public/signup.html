@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign Up - Killer Web</title>
+<link rel="stylesheet" href="style.css">
+<script>
+  const urlParams = new URLSearchParams(window.location.search);
+  const refId = urlParams.get('ref') || localStorage.getItem('refId') || '';
+</script>
+</head>
+<body class="auth-page">
+<div class="auth-box">
+  <div class="logo-circle">🔥</div>
+  <div class="auth-title">KILLER WEB</div>
+  <div class="auth-sub">Create your account</div>
+  <form id="signupForm" onsubmit="return submitSignup(event);">
+    <div class="input-group">
+      <label>👤 Username</label>
+      <input type="text" id="username" placeholder="Enter username" required>
+    </div>
+    <div class="input-group">
+      <label>📧 Email</label>
+      <input type="email" id="email" placeholder="example@gmail.com" required>
+    </div>
+    <div class="input-group">
+      <label>🆔 Chat ID (Telegram)</label>
+      <input type="text" id="chatId" placeholder="Enter your Chat ID" required>
+      <a href="https://t.me/userinfobot" target="_blank" class="chatid-help">
+        📲 Click here to get your Chat ID from Telegram
+      </a>
+    </div>
+    <div class="input-group">
+      <label>🔒 Password</label>
+      <input type="password" id="password" placeholder="Enter password" required>
+    </div>
+    <button type="submit" class="auth-btn" id="signupBtn">🚀 SIGN UP</button>
+    <p class="auth-link">Already have account? <a href="login.html">Login</a></p>
+  </form>
+</div>
+<div id="toast" class="toast"></div>
+<script>
+async function submitSignup(e) {
+  e.preventDefault();
+  const btn = document.getElementById('signupBtn');
+  btn.disabled = true; btn.textContent = '⏳ Creating...';
+  const data = {
+    username: document.getElementById('username').value.trim(),
+    email: document.getElementById('email').value.trim(),
+    chatId: document.getElementById('chatId').value.trim(),
+    password: document.getElementById('password').value,
+    ref: refId
+  };
+  try {
+    const res = await fetch('/signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    const result = await res.json();
+    if (result.success) {
+      localStorage.setItem('killerUser', JSON.stringify({
+        username: data.username, email: data.email
+      }));
+      showToast('🎉 Account created!');
+      setTimeout(() => window.location.href = 'index.html', 1000);
+    } else {
+      showToast('❌ ' + result.msg);
+      btn.disabled = false; btn.textContent = '🚀 SIGN UP';
+    }
+  } catch (err) {
+    showToast('❌ Network error');
+    btn.disabled = false; btn.textContent = '🚀 SIGN UP';
+  }
+  return false;
+}
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+</script>
+</body>
+</html>
