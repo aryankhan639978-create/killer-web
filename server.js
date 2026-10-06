@@ -17,10 +17,11 @@ const BOT_START = new Date('2026-10-05');
 const WEBSITE_URL = 'https://killer-web.onrender.com';
 
 // ===== MONGODB =====
+const MONGO_URI = 'mongodb+srv://killeradmin:GYpkd7wXELNojHF2@cluster0.libonwi.mongodb.net/killerweb?retryWrites=true&w=majority';
 
+mongoose.connect(MONGO_URI)
   .then(() => console.log('✅ MongoDB connected'))
-  .catch(err => console.log('❌ MongoDB error:', err.message));const MONGO_URI = 'mongodb+srv://killeradmin:GYpkd7wXELNojHF2@cluster0.libonwi.mongodb.net/killerweb?retryWrites=true&w=majority';
-
+  .catch(err => console.log('❌ MongoDB error:', err.message));
 // ===== SCHEMAS =====
 const UserSchema = new mongoose.Schema({
   userId: { type: String, unique: true },
